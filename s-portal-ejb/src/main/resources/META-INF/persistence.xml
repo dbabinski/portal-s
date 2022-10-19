@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="s-portal-EJB-PU" transaction-type="JTA">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <jta-data-source>java:jboss/datasources/sportal</jta-data-source>
+    <class>pl.sportal.jpa.BlokadaKonta</class>
+    <class>pl.sportal.jpa.Dostep</class>
+    <class>pl.sportal.jpa.Grupy</class>
+    <class>pl.sportal.jpa.KomorkiOrganizacyjne</class>
+    <class>pl.sportal.jpa.Konfiguracja</class>
+    <class>pl.sportal.jpa.Konta</class>
+    <class>pl.sportal.jpa.KontaGrupy</class>
+    <class>pl.sportal.jpa.Klienci</class>
+    <class>pl.sportal.jpa.ParametryHasla</class>
+    <class>pl.sportal.jpa.TypyDokumentow</class>
+    <class>pl.sportal.jpa.TypyEDokumentow</class>
+    <class>pl.sportal.jpa.TypyGrup</class>
+    <class>pl.sportal.jpa.TypyKomunikatow</class>
+    <class>pl.sportal.jpa.Uprawnienia</class>
+    <class>pl.sportal.jpa.UstawieniaPacjenta</class>
+    <class>pl.sportal.jpa.JednorazoweKodyDostepu</class>    
+    <class>pl.sportal.jpa.KonfiguracjaSerweraPoczty</class>
+    <class>pl.sportal.jpa.ZmianaHasla</class>
+    <class>pl.sportal.jpa.KlienciPowiazania</class>    
+    <class>pl.sportal.jpa.Autentykacja</class>
+    <class>pl.sportal.jpa.KonfiguracjaSerweraSms</class>
+    <class>pl.sportal.jpa.SzablonyPowiadomien</class>
+    <class>pl.sportal.jpa.TypyPowiadomien</class>
+    <class>pl.sportal.jpa.portal.Aktualnosci</class>
+    <class>pl.sportal.jpa.portal.Regulamin</class>
+    <class>pl.sportal.jpa.portal.Tresci</class>
+    <class>pl.sportal.jpa.Logi</class>
+    <class>pl.sportal.jpa.Logowania</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+    </properties>
+  </persistence-unit>
+</persistence>

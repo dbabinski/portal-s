@@ -1,0 +1,91 @@
+version: '3'
+
+networks:
+
+  sportal-net:
+    driver: bridge
+
+services:
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+     PGADMIN_DEFAULT_EMAIL: d.babinski94@gmail.com
+     PGADMIN_DEFAULT_PASSWORD: zaq12wsx
+    ports:
+     - 0.0.0.0:5050:80
+    networks:
+     - sportal-net
+
+  sm-portal-postgres:
+    build:
+      context: ./sm-portal-docker/compose/postgres
+    image: sm-portal-postgres
+    restart: on-failure
+    container_name: sm-portal-postgres
+    environment:
+      - POSTGRES_PASSWORD=19P8VqX8OsEsbb
+      - TZ=Europe/Warsaw
+    ports:
+      - 0.0.0.0:25432:5432
+    networks:
+      - sportal-net
+
+    volumes:
+      - ./sm-portal-docker/volumes/postgres/:/var/lib/postgresql/data
+    tty: true
+
+  sm-portal-wildfly:
+    build:
+        context: ./sm-portal-docker/compose/wildfly
+        args:
+          SMPORTAL_PASSWORD: test
+          ADMIN_PASSWORD: test
+    image: sm-portal-wildfly
+    restart: on-failure
+    container_name: sm-portal-wildfly
+    volumes:
+     - ./sm-portal-docker/volumes/wildfly/deployments/:/opt/jboss/wildfly/standalone/deployments/
+    working_dir: /opt/jboss/wildfly/
+    networks:
+      - sportal-net
+    ports:
+      # http
+      - 0.0.0.0:28080:8080
+      # management-http
+      - 0.0.0.0:29990:9990
+      # debugger
+      - 0.0.0.0:28787:8787
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=19P8VqX8OsEsbb
+      - POSTGRES_CONNECTION=jdbc:postgresql://sm-portal-postgres:5432/smportal
+      - TZ=Europe/Warsaw
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=465
+      - MAIL_SSL=true
+      - MAIL_TLS=false
+      - MAIL_USER=d.babinski94@gmail.com
+      - MAIL_PASSWORD=19P8VqX8OsEsbb
+      - JAVA_OPTS=-Xms256m -Xmx2048m -XX:MetaspaceSize=192M -XX:MaxMetaspaceSize=512m -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -Xdebug -Xrunjdwp:transport=dt_socket,address=*:8787,server=y,suspend=n
+    links:
+      - sm-portal-postgres
+    restart: always
+    depends_on:
+      - sm-portal-postgres
+
+  sportal-proxy:
+    build:
+      context: ./proxy/compose/nginx
+    image: sportal-proxy
+    restart: always
+    container_name: sportal-proxy
+    ports:
+      - 0.0.0.0:80:80
+      # - 0.0.0.0:443:443
+    networks:
+      - sportal-net
+    tty: true
+    depends_on:
+      - sm-portal-wildfly
